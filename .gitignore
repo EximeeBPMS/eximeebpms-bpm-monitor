@@ -1,6 +1,5 @@
 ### MAVEN ###
 target/
-**/.mvn/
 !**/src/main/**/target/
 !**/src/test/**/target/
 **/pom.xml.versionsBackup

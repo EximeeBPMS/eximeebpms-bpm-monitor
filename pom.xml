@@ -1,51 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.5</version>
-		<relativePath />
-	</parent>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.4.5</version>
+    <relativePath />
+  </parent>
 
-	<groupId>org.eximeebpms.bpm.extension.monitor</groupId>
-	<artifactId>eximeebpms-bpm-spring-boot-monitor-root</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+  <name>EximeeBPMS BPM Spring Boot Monitor</name>
 
-	<properties>
-		<java.version>21</java.version>
-		<maven.deploy.skip>true</maven.deploy.skip>
-	</properties>
+  <groupId>org.eximeebpms.bpm.extension.monitor</groupId>
+  <artifactId>eximeebpms-bpm-spring-boot-monitor-root</artifactId>
+  <version>1.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.eximeebpms.bpm</groupId>
-				<artifactId>eximeebpms-bom</artifactId>
-				<version>1.0.0</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<modules>
-		<module>extension</module>
-	</modules>
+  <properties>
+    <java.version>21</java.version>
+    <maven.deploy.skip>true</maven.deploy.skip>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<releaseProfiles>release</releaseProfiles>
-					<goals>deploy</goals>
-					<tagNameFormat>v@{project.version}</tagNameFormat>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <gpg.useagent>true</gpg.useagent>
+    <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eximeebpms.bpm</groupId>
+        <artifactId>eximeebpms-bom</artifactId>
+        <version>1.0.0</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <modules>
+    <module>extension</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.6.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.11.2</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.7</version>
+            <configuration>
+              <useAgent>${gpg.useagent}</useAgent>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <repositories>
+    <repository>
+      <name>Central Portal Snapshots</name>
+      <id>central-portal-snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>EximeeBPMS services GmbH</name>
+    <url>https://eximeebpms.org</url>
+  </organization>
+
+  <url>https://eximeebpms.org</url>
+
+  <scm>
+    <url>https://github.com/EximeeBPMS/eximeebpms-bpm-monitor</url>
+    <connection>scm:git:https://github.com/EximeeBPMS/eximeebpms-bpm-monitor.git</connection>
+    <developerConnection>scm:git:https://github.com/EximeeBPMS/eximeebpms-bpm-monitor.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 </project>
