@@ -53,6 +53,9 @@ public abstract class Monitor {
   }
 
   protected ProcessDefinition getProcessDefinition(String processDefinitionId) {
+    if (processDefinitionId == null) {
+      return null;
+    }
     return processEngine.getRepositoryService().createProcessDefinitionQuery()
         .processDefinitionId(processDefinitionId).singleResult();
   }

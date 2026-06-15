@@ -32,6 +32,9 @@ public class ExternalTaskSnapshotMonitor extends Monitor {
                 .unlimitedList();
 
         for (ExternalTask task : tasks) {
+            if (task.getProcessDefinitionId() == null) {
+                continue;
+            }
             Tags tags = ExternalTaskMeterTags.createTags(task.getTenantId(), task.getProcessDefinitionId(),
                     task.getProcessDefinitionKey(), task.getActivityId(), task.getTopicName());
 

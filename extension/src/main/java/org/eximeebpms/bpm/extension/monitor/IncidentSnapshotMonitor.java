@@ -35,6 +35,9 @@ public class IncidentSnapshotMonitor extends Monitor {
         Date now = new Date();
 
         for (Incident inc : incs) {
+            if (inc.getProcessDefinitionId() == null) {
+                continue;
+            }
             String groupByKey = inc.getProcessDefinitionId();
             MultiGaugeData data = map.get(groupByKey);
 
@@ -45,6 +48,9 @@ public class IncidentSnapshotMonitor extends Monitor {
                 gaugeValues.put(Meters.INCIDENTS_OPEN.getMeterName(), 0L);
 
                 ProcessDefinition processDefinition = getProcessDefinition(inc.getProcessDefinitionId());
+                if (processDefinition == null) {
+                    continue;
+                }
                 Tags tags = IncidentMeterTags.createTags(processDefinition.getTenantId(), processDefinition.getId(),
                         processDefinition.getKey(), inc.getActivityId(), inc.getFailedActivityId(),
                         inc.getIncidentType());

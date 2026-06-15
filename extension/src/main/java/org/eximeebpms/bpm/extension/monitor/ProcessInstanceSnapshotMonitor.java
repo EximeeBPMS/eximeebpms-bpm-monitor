@@ -42,6 +42,9 @@ public class ProcessInstanceSnapshotMonitor extends Monitor {
                 gaugeValues.put(Meters.PROCESS_INSTANCES_SUSPENDED.getMeterName(), 0L);
 
                 ProcessDefinition processDefinition = getProcessDefinition(pi.getProcessDefinitionId());
+                if (processDefinition == null) {
+                    continue;
+                }
                 Tags tags = ProcessInstanceMeterTags.createTags(pi.getTenantId(), pi.getProcessDefinitionId(),
                         processDefinition.getKey());
 

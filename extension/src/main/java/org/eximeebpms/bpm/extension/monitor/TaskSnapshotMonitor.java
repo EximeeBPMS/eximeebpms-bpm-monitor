@@ -39,6 +39,9 @@ public class TaskSnapshotMonitor extends Monitor {
             if (task.getProcessInstanceId() != null) {
                 // Task is related to a process instance
                 ProcessDefinition processDefinition = getProcessDefinition(task.getProcessDefinitionId());
+                if (processDefinition == null) {
+                    continue;
+                }
                 tags = TaskProcessInstanceMeterTags.createTags(task.getTenantId(), task.getProcessDefinitionId(),
                         processDefinition.getKey(), task.getTaskDefinitionKey());
 
