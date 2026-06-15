@@ -83,9 +83,7 @@ jobs:
 
       - name: Deploy
         run: |
-          ./mvnw release:perform -Dgoals=""
-          cd target/checkout
-          ./mvnw deploy -Prelease -B -DskipTests
+          ./mvnw release:perform -B -DskipTests
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets[env.GITHUB_PAT_USER] }}

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.eximeebpms.bpm.engine.ProcessEngine;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -37,7 +36,9 @@ public class SnapshotMonitors {
         monitors = List.of(new ProcessInstanceSnapshotMonitor(processEngine, meterRegistry),
                 new IncidentSnapshotMonitor(processEngine, meterRegistry),
                 new TaskSnapshotMonitor(processEngine, meterRegistry),
-                new ExternalTaskSnapshotMonitor(processEngine, meterRegistry));
+                new ExternalTaskSnapshotMonitor(processEngine, meterRegistry),
+                new FailedJobSnapshotMonitor(processEngine, meterRegistry),
+                new FinishedProcessInstanceSnapshotMonitor(processEngine, meterRegistry));
     }
 
     @Scheduled(fixedDelayString = "${eximeebpms.monitoring.snapshot.updateRate}")
