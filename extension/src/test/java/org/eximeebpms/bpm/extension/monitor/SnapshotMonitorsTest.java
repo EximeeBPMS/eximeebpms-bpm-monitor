@@ -165,4 +165,53 @@ class SnapshotMonitorsTest {
 
     }
 
+    @Test
+    void failedJobsGauge() {
+        // GIVEN process instances with jobs that failed at least once
+        ProcessDefinition processDefinition = MonitorTestUtils.createFailingJobProcessDefinition(processEngine);
+
+        for (int i = 0; i < EXPECTED_COUNT; i++) {
+            processEngine.getRuntimeService().startProcessInstanceById(processDefinition.getId());
+        }
+
+        processEngine.getManagementService().createJobQuery()
+                .processDefinitionId(processDefinition.getId())
+                .list()
+                .forEach(job -> {
+                    try {
+                        processEngine.getManagementService().executeJob(job.getId());
+                    } catch (Exception ignored) {
+                        // expected — job fails and records exception message
+                    }
+                });
+
+        // WHEN gauges updated
+        snapshotMonitors.update();
+
+        // THEN gauge equals number of jobs with recorded failures
+        Gauge gauge = meterRegistry.find(Meters.JOBS_FAILED.getMeterName())
+                .tag(ProcessInstanceMeterTags.PROCESS_DEFINITION_ID.getTagName(), processDefinition.getId())
+                .gauge();
+        assertEquals(EXPECTED_COUNT, Objects.requireNonNull(gauge).value());
+    }
+
+    @Test
+    void finishedProcessInstancesGauge() {
+        // GIVEN finished process instances (empty process completes immediately)
+        ProcessDefinition processDefinition = MonitorTestUtils.createEmptyProcessDefinition(processEngine);
+
+        for (int i = 0; i < EXPECTED_COUNT; i++) {
+            processEngine.getRuntimeService().startProcessInstanceById(processDefinition.getId());
+        }
+
+        // WHEN gauges updated
+        snapshotMonitors.update();
+
+        // THEN gauge equals number of finished instances
+        Gauge gauge = meterRegistry.find(Meters.PROCESS_INSTANCES_FINISHED.getMeterName())
+                .tag(ProcessInstanceMeterTags.PROCESS_DEFINITION_ID.getTagName(), processDefinition.getId())
+                .gauge();
+        assertEquals(EXPECTED_COUNT, Objects.requireNonNull(gauge).value());
+    }
+
 }

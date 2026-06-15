@@ -94,4 +94,19 @@ public class MonitorTestUtils {
         .singleResult();
   }
 
+  public static ProcessDefinition createFailingJobProcessDefinition(ProcessEngine processEngine) {
+    String processKey = "failing-job-process";
+    BpmnModelInstance modelInstance = Bpmn.createExecutableProcess(processKey)
+        .id(processKey)
+        .camundaHistoryTimeToLive(5000)
+        .startEvent()
+        .serviceTask().camundaAsyncBefore()
+        .camundaClass(FailingDelegate.class)
+        .endEvent().done();
+    String deploymentId = processEngine.getRepositoryService().createDeployment()
+        .addModelInstance(processKey + ".bpmn", modelInstance).deploy().getId();
+    return processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deploymentId)
+        .singleResult();
+  }
+
 }

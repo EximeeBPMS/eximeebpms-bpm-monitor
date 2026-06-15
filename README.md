@@ -16,7 +16,9 @@ Quick start guide for Maven project
     <version>0.1.7</version>
 </dependency>
 ```
-2. Add the `@EnableMonitoring` annotation to your application entrypoint class.
+2. The extension is automatically configured via Spring Boot's auto-configuration mechanism — no additional annotations are required.
+
+   If you are not using Spring Boot auto-configuration, add the `@EnableMonitoring` annotation to your application entrypoint class:
 ``` java
 @SpringBootApplication
 @org.eximeebpms.bpm.extension.monitor.EnableMonitoring
@@ -99,6 +101,8 @@ The extension provides metrics on Process Instances, Incidents, Tasks, and Exter
 - `eximeebpms.external.tasks.ended`
 - `eximeebpms.external.tasks.open.total`
 - `eximeebpms.external.tasks.open.error.total`
+- `eximeebpms.jobs.failed.total`
+- `eximeebpms.process.instances.finished.total`
 
 ## Tags
 Metrics include the following tags:
@@ -129,6 +133,14 @@ Metrics include the following tags:
     - `tenant.id`
     - `topic.name`
     - `activity.id`
+    - `process.definition.id`
+    - `process.definition.key`
+- Failed job tags:
+    - `tenant.id`
+    - `process.definition.id`
+    - `process.definition.key`
+- Finished process instance tags:
+    - `tenant.id`
     - `process.definition.id`
     - `process.definition.key`
 
