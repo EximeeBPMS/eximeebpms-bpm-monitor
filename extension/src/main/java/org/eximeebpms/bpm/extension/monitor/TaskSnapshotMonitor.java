@@ -45,11 +45,6 @@ public class TaskSnapshotMonitor extends Monitor {
                 tags = TaskProcessInstanceMeterTags.createTags(task.getTenantId(), task.getProcessDefinitionId(),
                         processDefinition.getKey(), task.getTaskDefinitionKey());
 
-            } else if (task.getCaseInstanceId() != null) {
-                // Task is related to a case instance
-                tags = TaskCaseInstanceMeterTags.createTags(task.getTenantId(), task.getCaseDefinitionId(),
-                        task.getTaskDefinitionKey());
-
             } else {
                 // Task is stand-alone
                 tags = TaskStandAloneMeterTags.createTags(task.getTenantId(), task.getName());
