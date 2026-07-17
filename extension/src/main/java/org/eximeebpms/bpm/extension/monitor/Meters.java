@@ -29,7 +29,9 @@ public enum Meters {
     EXTERNAL_TASKS_OPEN("eximeebpms.external.tasks.open.total"),
     EXTERNAL_TASKS_OPEN_ERROR("eximeebpms.external.tasks.open.error.total"),
     JOBS_FAILED("eximeebpms.jobs.failed.total"),
-    PROCESS_INSTANCES_FINISHED("eximeebpms.process.instances.finished.total");
+    PROCESS_INSTANCES_FINISHED("eximeebpms.process.instances.finished.total"),
+    SCRIPT_VIOLATIONS("eximeebpms.script.violations"),
+    SCRIPT_VIOLATIONS_TOTAL("eximeebpms.script.violations.total");
 
     Meters(String meterName) {
         this.meterName = meterName;
