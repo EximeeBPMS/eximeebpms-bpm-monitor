@@ -33,3 +33,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Agent-prepared commit message drafts (owner reviews, never auto-committed)
+.gitmessage
