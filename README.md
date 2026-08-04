@@ -80,7 +80,7 @@ Example setup with a cluster of application nodes running on Docker swarm and mo
 # Guide
 
 ## Metrics
-The extension provides metrics on Process Instances, Incidents, Tasks, and External Tasks:
+The extension provides metrics on Process Instances, Incidents, Tasks, External Tasks, and Script Guard violations:
 - `eximeebpms.process.instances.started`
 - `eximeebpms.process.instances.ended`
 - `eximeebpms.process.instances.running.total`
@@ -103,6 +103,8 @@ The extension provides metrics on Process Instances, Incidents, Tasks, and Exter
 - `eximeebpms.external.tasks.open.error.total`
 - `eximeebpms.jobs.failed.total`
 - `eximeebpms.process.instances.finished.total`
+- `eximeebpms.script.violations`
+- `eximeebpms.script.violations.total`
 
 ## Tags
 Metrics include the following tags:
@@ -143,6 +145,12 @@ Metrics include the following tags:
     - `tenant.id`
     - `process.definition.id`
     - `process.definition.key`
+- Script violation tags:
+    - `process.definition.key`
+    - `activity.id`
+    - `language`
+    - `origin`
+    - `rule.code`
 
 ## Cluster considerations
 When running an applcaition in a cluster using a shared database, it is only necassary for **one** of the instances to be retreiving the guage metrics which provide the current snapshot from the database (for example, `eximeebpms.process.instances.running.total` is a guage metric and would have the same value for all instances). However it is important that counter metrics are being monitored on all instances by the monitoring system. For example, `eximeebpms.process.instances.started` metric will provide the count of process instances started on the instance since the instance started, so to alert if a particular process start count drops below a threshold then all instances in the cluster need to be monitored.
